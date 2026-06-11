@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import API from "../api/api";
 
 export default function UserLogin({
@@ -7,15 +6,9 @@ export default function UserLogin({
   goRegister,
   goHome,
 }) {
-  const [email, setEmail] =
-    useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [password, setPassword] =
-    useState("");
-
-  //
-  // USER LOGIN
-  //
   const login = async () => {
     try {
       const res = await API.post(
@@ -26,9 +19,6 @@ export default function UserLogin({
         }
       );
 
-      //
-      // ONLY USER
-      //
       if (
         res.data.user.role !==
         "CANDIDATE"
@@ -65,17 +55,24 @@ export default function UserLogin({
           Book Interview Slots
         </p>
 
+        {/* EMAIL */}
         <input
+          type="email"
+          aria-label="Email Address"
           placeholder="Email"
+          value={email}
           className="w-full bg-slate-800 p-3 rounded-xl mb-4 text-white"
           onChange={(e) =>
             setEmail(e.target.value)
           }
         />
 
+        {/* PASSWORD */}
         <input
           type="password"
+          aria-label="Password"
           placeholder="Password"
+          value={password}
           className="w-full bg-slate-800 p-3 rounded-xl mb-6 text-white"
           onChange={(e) =>
             setPassword(
@@ -84,26 +81,32 @@ export default function UserLogin({
           }
         />
 
+        {/* LOGIN */}
         <button
+          type="button"
           onClick={login}
           className="w-full bg-indigo-600 py-3 rounded-xl text-white"
         >
           Login
         </button>
 
-        <p
+        {/* CREATE ACCOUNT */}
+        <button
+          type="button"
           onClick={goRegister}
-          className="text-center mt-5 text-indigo-400 cursor-pointer"
+          className="w-full mt-5 text-indigo-400 hover:text-indigo-300 transition"
         >
           Create Account
-        </p>
+        </button>
 
-        <p
+        {/* BACK */}
+        <button
+          type="button"
           onClick={goHome}
-          className="text-center mt-3 text-slate-400 cursor-pointer"
+          className="w-full mt-3 text-slate-400 hover:text-slate-300 transition"
         >
           Back
-        </p>
+        </button>
       </div>
     </div>
   );

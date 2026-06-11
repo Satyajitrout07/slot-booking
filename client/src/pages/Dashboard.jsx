@@ -1,13 +1,29 @@
-import { useEffect, useState } from "react";
-
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import API from "../api/api";
-
-import socket from "../socket/socket.js";
+import socket from "../socket/socket";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Socket Connected:", socket.id);
+    });
+
+    socket.on("slot-booked", () => {
+      console.log("A slot was booked");
+    });
+
+    socket.on("slot-created", () => {
+      console.log("A new slot was created");
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("slot-booked");
+      socket.off("slot-created");
+    };
+  }, []);
 
   const logout = () => {
     localStorage.clear();
@@ -16,6 +32,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-8">
+      {/* Header */}
       <div className="flex items-center justify-between mb-10">
         <div>
           <h1 className="text-4xl font-bold">
@@ -28,19 +45,21 @@ export default function Dashboard() {
         </div>
 
         <button
+          type="button"
           onClick={logout}
-          className="bg-red-500 px-5 py-3 rounded-2xl"
+          className="bg-red-500 hover:bg-red-600 px-5 py-3 rounded-2xl transition"
         >
           Logout
         </button>
       </div>
 
+      {/* Duration Cards */}
       <div className="grid md:grid-cols-3 gap-8">
-        <div
-          onClick={() =>
-            navigate("/slots/30")
-          }
-          className="cursor-pointer bg-blue-600 p-10 rounded-3xl hover:scale-105 transition"
+        {/* 30 MIN */}
+        <button
+          type="button"
+          onClick={() => navigate("/slots/30")}
+          className="text-left bg-blue-600 p-10 rounded-3xl hover:scale-105 transition cursor-pointer"
         >
           <h2 className="text-3xl font-bold">
             30 Minutes
@@ -49,13 +68,13 @@ export default function Dashboard() {
           <p className="mt-4">
             Quick Screening
           </p>
-        </div>
+        </button>
 
-        <div
-          onClick={() =>
-            navigate("/slots/45")
-          }
-          className="cursor-pointer bg-purple-600 p-10 rounded-3xl hover:scale-105 transition"
+        {/* 45 MIN */}
+        <button
+          type="button"
+          onClick={() => navigate("/slots/45")}
+          className="text-left bg-purple-600 p-10 rounded-3xl hover:scale-105 transition cursor-pointer"
         >
           <h2 className="text-3xl font-bold">
             45 Minutes
@@ -64,13 +83,13 @@ export default function Dashboard() {
           <p className="mt-4">
             Technical Round
           </p>
-        </div>
+        </button>
 
-        <div
-          onClick={() =>
-            navigate("/slots/60")
-          }
-          className="cursor-pointer bg-green-600 p-10 rounded-3xl hover:scale-105 transition"
+        {/* 60 MIN */}
+        <button
+          type="button"
+          onClick={() => navigate("/slots/60")}
+          className="text-left bg-green-600 p-10 rounded-3xl hover:scale-105 transition cursor-pointer"
         >
           <h2 className="text-3xl font-bold">
             1 Hour
@@ -79,7 +98,7 @@ export default function Dashboard() {
           <p className="mt-4">
             Full Interview
           </p>
-        </div>
+        </button>
       </div>
     </div>
   );

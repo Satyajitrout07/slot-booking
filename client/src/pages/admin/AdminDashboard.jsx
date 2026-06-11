@@ -78,11 +78,12 @@ export default function AdminDashboard() {
 
         {/* LOGOUT */}
         <button
-          onClick={logout}
-          className="bg-red-500 hover:bg-red-600 transition-all px-5 py-3 rounded-2xl"
-        >
-          Logout
-        </button>
+  type="button"
+  onClick={logout}
+  className="bg-red-500 hover:bg-red-600 transition-all px-5 py-3 rounded-2xl"
+>
+  Logout
+</button>
       </div>
 
       {/* STATS */}

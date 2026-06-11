@@ -1,50 +1,28 @@
 import { useState } from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
 
-//
-// BACKGROUND
-//
 import portalBg from "../../assets/portal-bg.jpg";
 
 export default function AdminLogin() {
-  //
-  // NAVIGATE
-  //
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  //
-  // STATES
-  //
   const [email, setEmail] =
     useState("");
 
-  const [password,
-    setPassword] =
+  const [password, setPassword] =
     useState("");
 
-  //
-  // LOGIN
-  //
   const login = async () => {
     try {
-      const res =
-        await API.post(
-          "/auth/login",
-          {
-            email,
-            password,
-          }
-        );
+      const res = await API.post(
+        "/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
-      //
-      // ADMIN CHECK
-      //
       if (
         res.data.user.role !==
         "ADMIN"
@@ -54,9 +32,6 @@ export default function AdminLogin() {
         );
       }
 
-      //
-      // SAVE TOKEN
-      //
       localStorage.setItem(
         "token",
         res.data.token
@@ -67,9 +42,6 @@ export default function AdminLogin() {
         res.data.user.role
       );
 
-      //
-      // REDIRECT
-      //
       navigate(
         "/admin/dashboard"
       );
@@ -94,7 +66,7 @@ export default function AdminLogin() {
       {/* DARK OVERLAY */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"></div>
 
-      {/* GLOW */}
+      {/* GLOW EFFECTS */}
       <div className="absolute top-10 left-10 w-[300px] h-[300px] bg-red-500/20 blur-[120px] rounded-full"></div>
 
       <div className="absolute bottom-10 right-10 w-[300px] h-[300px] bg-indigo-500/20 blur-[120px] rounded-full"></div>
@@ -118,8 +90,18 @@ export default function AdminLogin() {
         </p>
 
         {/* EMAIL */}
+        <label
+          htmlFor="admin-email"
+          className="block text-white mb-2"
+        >
+          Admin Email
+        </label>
+
         <input
+          id="admin-email"
           type="email"
+          aria-label="Admin Email"
+          value={email}
           placeholder="Admin Email"
           className="w-full bg-slate-900/60 border border-white/10 focus:border-red-500 focus:ring-2 focus:ring-red-500/30 transition-all p-5 rounded-2xl mb-5 outline-none text-white placeholder:text-slate-400"
           onChange={(e) =>
@@ -130,8 +112,18 @@ export default function AdminLogin() {
         />
 
         {/* PASSWORD */}
+        <label
+          htmlFor="admin-password"
+          className="block text-white mb-2"
+        >
+          Password
+        </label>
+
         <input
+          id="admin-password"
           type="password"
+          aria-label="Password"
+          value={password}
           placeholder="Password"
           className="w-full bg-slate-900/60 border border-white/10 focus:border-red-500 focus:ring-2 focus:ring-red-500/30 transition-all p-5 rounded-2xl mb-8 outline-none text-white placeholder:text-slate-400"
           onChange={(e) =>
@@ -143,6 +135,7 @@ export default function AdminLogin() {
 
         {/* LOGIN BUTTON */}
         <button
+          type="button"
           onClick={login}
           className="w-full bg-gradient-to-r from-red-500 to-pink-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300 py-5 rounded-2xl text-lg font-semibold text-white"
         >
@@ -150,28 +143,30 @@ export default function AdminLogin() {
         </button>
 
         {/* LINKS */}
-        <div className="mt-8 text-center space-y-4">
-          <p
+        <div className="mt-8 space-y-4">
+          <button
+            type="button"
             onClick={() =>
               navigate(
                 "/admin/register"
               )
             }
-            className="text-slate-300 hover:text-white cursor-pointer transition-all"
+            className="w-full text-slate-300 hover:text-white transition-all"
           >
             Create HR Account
-          </p>
+          </button>
 
-          <p
+          <button
+            type="button"
             onClick={() =>
               navigate(
                 "/login"
               )
             }
-            className="text-cyan-400 hover:text-cyan-300 cursor-pointer transition-all"
+            className="w-full text-cyan-400 hover:text-cyan-300 transition-all"
           >
             User Login
-          </p>
+          </button>
         </div>
       </div>
     </div>

@@ -1,61 +1,34 @@
 import { useState } from "react";
-
 import API from "../api/api";
 
-export default function CreateSlot({
-  refresh,
-}) {
-  //
-  // STATE
-  //
-  const [time, setTime] =
-    useState("");
+export default function CreateSlot({ refresh }) {
+  const [time, setTime] = useState("");
 
-  //
-  // CREATE SLOT
-  //
   const createSlot = async () => {
+    if (!time) {
+      alert("Please select a date and time");
+      return;
+    }
+
     try {
-      //
-      // START TIME
-      //
-      const start =
-        new Date(time);
+      const start = new Date(time);
 
-      //
-      // END TIME (1 HOUR)
-      //
-      const end =
-        new Date(start);
+      const end = new Date(start);
+      end.setHours(end.getHours() + 1);
 
-      end.setHours(
-        end.getHours() + 1
-      );
+      await API.post("/admin/slots", {
+        startTime: start,
+        endTime: end,
+      });
 
-      //
-      // API CALL
-      //
-      await API.post(
-        "/admin/slots",
-        {
-          startTime: start,
-          endTime: end,
-        }
-      );
-
-      //
-      // SUCCESS
-      //
       alert("Slot Created");
 
-      //
-      // REFRESH DASHBOARD
-      //
+      setTime("");
+
       refresh();
-    } catch {
-      alert(
-        "Failed to create slot"
-      );
+    } catch (error) {
+      console.error(error);
+      alert("Failed to create slot");
     }
   };
 
@@ -65,15 +38,24 @@ export default function CreateSlot({
         Create Interview Slot
       </h2>
 
+      <label
+        htmlFor="slot-time"
+        className="block mb-2 text-sm text-slate-300"
+      >
+        Select Date & Time
+      </label>
+
       <input
+        id="slot-time"
+        aria-label="Interview Slot Date and Time"
         type="datetime-local"
+        value={time}
         className="w-full bg-slate-800 p-3 rounded-xl text-white outline-none"
-        onChange={(e) =>
-          setTime(e.target.value)
-        }
+        onChange={(e) => setTime(e.target.value)}
       />
 
       <button
+        type="button"
         onClick={createSlot}
         className="mt-5 bg-indigo-600 hover:opacity-90 px-5 py-3 rounded-xl transition-all"
       >

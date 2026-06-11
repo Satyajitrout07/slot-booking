@@ -1,88 +1,41 @@
 import { useState } from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 
 export default function Register() {
-  //
-  // NAVIGATE
-  //
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  //
-  // FORM
-  //
-  const [form, setForm] =
-    useState({
-      name: "",
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "CANDIDATE",
+  });
 
-      email: "",
+  const [loading, setLoading] = useState(false);
 
-      password: "",
-
-      role: "CANDIDATE",
-    });
-
-  //
-  // LOADING
-  //
-  const [loading,
-    setLoading] =
-    useState(false);
-
-  //
-  // REGISTER
-  //
-  const register = async (
-    e
-  ) => {
-    //
-    // STOP REFRESH
-    //
+  const register = async (e) => {
     e.preventDefault();
 
-    //
-    // PREVENT DOUBLE CLICK
-    //
     if (loading) return;
 
     try {
       setLoading(true);
 
-      //
-      // API
-      //
-      const res =
-        await API.post(
-          "/auth/register",
-          form
-        );
+      const res = await API.post(
+        "/auth/register",
+        form
+      );
 
-      //
-      // SUCCESS
-      //
-      if (
-        res.data.success
-      ) {
-        alert(
-          res.data.message
-        );
-
-        //
-        // REDIRECT
-        //
+      if (res.data.success) {
+        alert(res.data.message);
         navigate("/login");
       }
     } catch (error) {
       console.log(error);
 
       alert(
-        error.response?.data
-          ?.message ||
+        error.response?.data?.message ||
           "Registration failed"
       );
     } finally {
@@ -100,44 +53,71 @@ export default function Register() {
           Register
         </h1>
 
+        {/* NAME */}
+        <label
+          htmlFor="name"
+          className="block text-white mb-2"
+        >
+          Name
+        </label>
+
         <input
+          id="name"
           type="text"
-          placeholder="Name"
+          aria-label="Name"
+          value={form.name}
+          placeholder="Enter your name"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-4 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              name:
-                e.target.value,
+              name: e.target.value,
             })
           }
         />
 
+        {/* EMAIL */}
+        <label
+          htmlFor="email"
+          className="block text-white mb-2"
+        >
+          Email
+        </label>
+
         <input
+          id="email"
           type="email"
-          placeholder="Email"
+          aria-label="Email Address"
+          value={form.email}
+          placeholder="Enter your email"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-4 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              email:
-                e.target.value,
+              email: e.target.value,
             })
           }
         />
 
+        {/* PASSWORD */}
+        <label
+          htmlFor="password"
+          className="block text-white mb-2"
+        >
+          Password
+        </label>
+
         <input
+          id="password"
           type="password"
-          placeholder="Password"
+          aria-label="Password"
+          value={form.password}
+          placeholder="Enter your password"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-6 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              password:
-                e.target.value,
+              password: e.target.value,
             })
           }
         />
@@ -150,6 +130,16 @@ export default function Register() {
           {loading
             ? "Creating..."
             : "Register"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            navigate("/login")
+          }
+          className="w-full mt-4 text-slate-300 hover:text-white"
+        >
+          Already have an account? Login
         </button>
       </form>
     </div>

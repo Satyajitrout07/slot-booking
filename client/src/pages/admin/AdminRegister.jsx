@@ -1,49 +1,22 @@
 import { useState } from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
 
 export default function AdminRegister() {
-  //
-  // NAVIGATE
-  //
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  //
-  // FORM
-  //
-  const [form, setForm] =
-    useState({
-      name: "",
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    companyName: "",
+    hrPhone: "",
+    role: "ADMIN",
+  });
 
-      email: "",
+  const [loading, setLoading] = useState(false);
 
-      password: "",
-
-      companyName: "",
-
-      hrPhone: "",
-
-      role: "ADMIN",
-    });
-
-  //
-  // LOADING
-  //
-  const [loading,
-    setLoading] =
-    useState(false);
-
-  //
-  // REGISTER
-  //
-  const register = async (
-    e
-  ) => {
+  const register = async (e) => {
     e.preventDefault();
 
     if (loading) return;
@@ -51,35 +24,20 @@ export default function AdminRegister() {
     try {
       setLoading(true);
 
-      //
-      // API
-      //
-      const res =
-        await API.post(
-          "/auth/register",
-          form
-        );
+      const res = await API.post(
+        "/auth/register",
+        form
+      );
 
-      //
-      // SUCCESS
-      //
-      if (
-        res.data.success
-      ) {
-        alert(
-          res.data.message
-        );
-
-        navigate(
-          "/admin/login"
-        );
+      if (res.data.success) {
+        alert(res.data.message);
+        navigate("/admin/login");
       }
     } catch (error) {
       console.log(error);
 
       alert(
-        error.response?.data
-          ?.message ||
+        error.response?.data?.message ||
           "Registration failed"
       );
     } finally {
@@ -97,68 +55,117 @@ export default function AdminRegister() {
           Admin Register
         </h1>
 
+        {/* NAME */}
+        <label
+          htmlFor="name"
+          className="block text-white mb-2"
+        >
+          Name
+        </label>
+
         <input
+          id="name"
+          type="text"
+          aria-label="Name"
+          value={form.name}
           placeholder="Name"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-4 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              name:
-                e.target.value,
+              name: e.target.value,
             })
           }
         />
 
+        {/* EMAIL */}
+        <label
+          htmlFor="email"
+          className="block text-white mb-2"
+        >
+          Email
+        </label>
+
         <input
+          id="email"
+          type="email"
+          aria-label="Email"
+          value={form.email}
           placeholder="Email"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-4 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              email:
-                e.target.value,
+              email: e.target.value,
             })
           }
         />
 
+        {/* PASSWORD */}
+        <label
+          htmlFor="password"
+          className="block text-white mb-2"
+        >
+          Password
+        </label>
+
         <input
+          id="password"
           type="password"
+          aria-label="Password"
+          value={form.password}
           placeholder="Password"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-4 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              password:
-                e.target.value,
+              password: e.target.value,
             })
           }
         />
 
+        {/* COMPANY */}
+        <label
+          htmlFor="company"
+          className="block text-white mb-2"
+        >
+          Company Name
+        </label>
+
         <input
+          id="company"
+          type="text"
+          aria-label="Company Name"
+          value={form.companyName}
           placeholder="Company Name"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-4 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              companyName:
-                e.target.value,
+              companyName: e.target.value,
             })
           }
         />
 
+        {/* PHONE */}
+        <label
+          htmlFor="phone"
+          className="block text-white mb-2"
+        >
+          HR Phone
+        </label>
+
         <input
+          id="phone"
+          type="tel"
+          aria-label="HR Phone"
+          value={form.hrPhone}
           placeholder="HR Phone"
           className="w-full p-4 rounded-2xl bg-slate-800 text-white mb-6 outline-none"
           onChange={(e) =>
             setForm({
               ...form,
-
-              hrPhone:
-                e.target.value,
+              hrPhone: e.target.value,
             })
           }
         />
@@ -171,6 +178,16 @@ export default function AdminRegister() {
           {loading
             ? "Creating..."
             : "Create Admin"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            navigate("/admin/login")
+          }
+          className="w-full mt-4 text-slate-300 hover:text-white transition"
+        >
+          Back to Login
         </button>
       </form>
     </div>

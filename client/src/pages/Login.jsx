@@ -1,79 +1,33 @@
 import { useState } from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 
 export default function Login() {
-  //
-  // NAVIGATE
-  //
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
-  //
-  // STATES
-  //
-  const [email, setEmail] =
-    useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [password,
-    setPassword] =
-    useState("");
-
-  //
-  // LOGIN
-  //
   const login = async () => {
     try {
-      const res =
-        await API.post(
-          "/auth/login",
-          {
-            email,
-            password,
-          }
-        );
+      const res = await API.post("/auth/login", {
+        email,
+        password,
+      });
 
-      //
-      // CHECK USER
-      //
-      if (
-        res.data.user.role !==
-        "CANDIDATE"
-      ) {
-        return alert(
-          "Please login from admin panel"
-        );
+      if (res.data.user.role !== "CANDIDATE") {
+        return alert("Please login from admin panel");
       }
 
-      //
-      // STORE
-      //
-      localStorage.setItem(
-        "token",
-        res.data.token
-      );
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
 
-      localStorage.setItem(
-        "role",
-        res.data.user.role
-      );
-
-      //
-      // REDIRECT
-      //
-      navigate(
-        "/dashboard"
-      );
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
 
       alert(
-        error.response?.data
-          ?.message ||
+        error.response?.data?.message ||
           "Login failed"
       );
     }
@@ -110,11 +64,9 @@ export default function Login() {
               updates.
             </p>
 
-            {/* FEATURES */}
             <div className="mt-10 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
-
                 <p className="text-slate-300">
                   Live Slot Availability
                 </p>
@@ -122,7 +74,6 @@ export default function Login() {
 
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full bg-cyan-400"></div>
-
                 <p className="text-slate-300">
                   Real-time Notifications
                 </p>
@@ -130,7 +81,6 @@ export default function Login() {
 
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full bg-pink-400"></div>
-
                 <p className="text-slate-300">
                   Enterprise HR Workflow
                 </p>
@@ -142,7 +92,6 @@ export default function Login() {
         {/* RIGHT */}
         <div className="bg-white/5 border-l border-white/10 flex items-center justify-center p-10">
           <div className="w-full max-w-[380px]">
-            {/* TITLE */}
             <h1 className="text-5xl font-bold text-center mb-3">
               Welcome
             </h1>
@@ -154,13 +103,13 @@ export default function Login() {
             {/* EMAIL */}
             <div className="mb-5">
               <input
+                aria-label="Email Address"
                 type="email"
                 placeholder="Email Address"
                 className="w-full bg-slate-900/80 border border-white/5 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition-all p-5 rounded-2xl outline-none text-white"
+                value={email}
                 onChange={(e) =>
-                  setEmail(
-                    e.target.value
-                  )
+                  setEmail(e.target.value)
                 }
               />
             </div>
@@ -168,19 +117,20 @@ export default function Login() {
             {/* PASSWORD */}
             <div className="mb-8">
               <input
+                aria-label="Password"
                 type="password"
                 placeholder="Password"
                 className="w-full bg-slate-900/80 border border-white/5 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition-all p-5 rounded-2xl outline-none text-white"
+                value={password}
                 onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
+                  setPassword(e.target.value)
                 }
               />
             </div>
 
-            {/* BUTTON */}
+            {/* LOGIN BUTTON */}
             <button
+              type="button"
               onClick={login}
               className="w-full bg-gradient-to-r from-indigo-500 to-violet-600 hover:scale-[1.02] transition-all duration-300 py-5 rounded-2xl text-lg font-semibold shadow-lg shadow-indigo-500/20"
             >
@@ -189,27 +139,25 @@ export default function Login() {
 
             {/* LINKS */}
             <div className="mt-8 text-center space-y-4">
-              <p
+              <button
+                type="button"
                 onClick={() =>
-                  navigate(
-                    "/register"
-                  )
+                  navigate("/register")
                 }
-                className="text-slate-400 hover:text-white cursor-pointer transition-all"
+                className="block w-full text-slate-400 hover:text-white transition-all"
               >
                 Create Account
-              </p>
+              </button>
 
-              <p
+              <button
+                type="button"
                 onClick={() =>
-                  navigate(
-                    "/admin/login"
-                  )
+                  navigate("/admin/login")
                 }
-                className="text-emerald-400 hover:text-emerald-300 cursor-pointer transition-all"
+                className="block w-full text-emerald-400 hover:text-emerald-300 transition-all"
               >
                 Admin Login
-              </p>
+              </button>
             </div>
           </div>
         </div>
